@@ -39,7 +39,7 @@ static std::mutex m1, m2, m3, queue_mutex, pics_mutex;
 static std::queue <std::string> pics_queue;
 
 struct link {
-    link(std::string url) {
+    explicit link(std::string url) {
         parse_url(url);
     }
     link(std::string host, std::string port, std::string target) :
@@ -57,15 +57,18 @@ struct link {
                     url.find("/", 8) - url.find("://") - 3);
 
             if (url.find("/", 8) != std::string::npos) {
-                _target = url.substr(url.find("/", 8), url.size() - url.find("/", 8));
+                _target = url.substr(url.find("/", 8),
+                        url.size() - url.find("/", 8));
             } else {
                 _target = "/";
             }
         } else {
             if (url.find("http") != std::string::npos) {
                 _port = "80";
-                _host = url.substr(url.find("://") + 3, url.find("/", 8) - url.find("://") - 3);
-                _target = url.substr(url.find("/", 8), url.size() - url.find("/", 8));
+                _host = url.substr(url.find("://") + 3,
+                        url.find("/", 8) - url.find("://") - 3);
+                _target = url.substr(url.find("/", 8),
+                        url.size() - url.find("/", 8));
                 std::cout << _target;
             } else {
                 std::cout << "wrong type of url no http or https" << std::endl;
@@ -95,7 +98,6 @@ struct downloader {
                             temp.crawl(n1, nov);
                         }
                         catch (...) {
-
                         }
                     } else {
                         try {
@@ -103,20 +105,19 @@ struct downloader {
                             download_page(n1);
                         }
                         catch (...) {
-
                         }
-
                     }
                     fflush(stdout);
                     std::cout << href->value << " " << _level << std::endl;
                 }
-
             }
         }
 
         GumboVector *children = &node->v.element.children;
         for (unsigned int i = 0; i < children->length; ++i) {
-            search_for_links(static_cast<GumboNode *>(children->data[i]), _level);
+            search_for_links
+            (static_cast<GumboNode *>(children->data[i]),
+                    _level);
         }
     }
 
@@ -133,7 +134,6 @@ struct downloader {
             pics_mutex.unlock();
             //std::cout<<href->value<<std::endl;
         }
-
         GumboVector *children = &node->v.element.children;
         for (unsigned int i = 0; i < children->length; ++i) {
             search_for_links(static_cast<GumboNode *>(children->data[i]));
@@ -212,19 +212,15 @@ struct downloader {
     void myfunc() {
         std::vector <std::thread> threads;
         threads.reserve(5);
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 5; ++i) {
             threads.emplace_back(std::thread(&downloader::find_pics, this));
-
-        for (auto &thread:threads) {
+        }
+        for (auto &thread : threads) {
             thread.join();
         }
     }
-
-
 };
-
 static std::vector <std::string> str;
-
 int main(int argc, char **argv) {
     struct link first("https://horo.mail.ru/");
     struct link second("https://codbit.wordpress.com/");
