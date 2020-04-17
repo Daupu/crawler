@@ -21,7 +21,7 @@
 #include <gumbo.h>
 #include <thread>
 #include <functional>
-
+#include <queue>
 
 using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 namespace ssl = boost::asio::ssl;       // from <boost/asio/ssl.hpp>
@@ -33,8 +33,8 @@ namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 static std::queue <std::string> links;
 static std::queue <std::string> pages;
-boost::asio::io_context ioc;
-ssl::context ctx(ssl::context::tlsv12_client);
+//boost::asio::io_context ioc;
+//ssl::context ctx(ssl::context::tlsv12_client);
 static std::mutex m1, m2, m3, queue_mutex, pics_mutex;
 static std::queue <std::string> pics_queue;
 
@@ -42,9 +42,13 @@ struct link {
     explicit link(std::string url) {
         parse_url(url);
     }
-    link(std::string host, std::string port, std::string target) :
-    _host(host),
-    _port(port), _target(target) {}
+    link(std::string host, std::string port,
+            std::string target)
+    {
+        _host=host;
+        _port=port;
+        _target=target;
+    }
     std::string _target;
     std::string _host;
     std::string _port;
@@ -221,7 +225,7 @@ struct downloader {
     }
 };
 static std::vector <std::string> str;
-int main(int argc, char **argv) {
+int main() {
     struct link first("https://horo.mail.ru/");
     struct link second("https://codbit.wordpress.com/");
     downloader d1;
