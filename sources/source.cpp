@@ -45,9 +45,9 @@ struct link {
     link(std::string host, std::string port,
             std::string target)
     {
-        _host=host;
-        _port=port;
-        _target=target;
+        _host = host;
+        _port = port;
+        _target = target;
     }
     std::string _target;
     std::string _host;
