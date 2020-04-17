@@ -35,7 +35,7 @@ static std::queue <std::string> links;
 static std::queue <std::string> pages;
 //boost::asio::io_context ioc;
 //ssl::context ctx(ssl::context::tlsv12_client);
-static std::mutex m1, m2, m3, queue_mutex, pics_mutex;
+static std::mutex m1, queue_mutex, pics_mutex;
 static std::queue <std::string> pics_queue;
 
 struct link {
